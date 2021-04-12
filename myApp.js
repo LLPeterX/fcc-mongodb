@@ -79,19 +79,30 @@ const findPersonById = (personId, done) => {
     if (err) {
       console.error('findById() error:',err);
     } else {
+      console.log('call findById',data);
       done(null, data);
     } 
   }
   ); 
 };
 
-// set favorite food and save
+// find person by id, add to favorite foods, then save
+// почему-тоне проходит валидацию, 
 const findEditThenSave = (personId, done) => {
-  const foodToAdd = "hamburger";
-
-  done(null /*, data*/);
+  const foodToAdd = 'hamburger';
+  console.log('Search id=',personId);
+  Person.findById(personId, (err, person) => {
+    if(err) return console.log(err); 
+    person.favoriteFoods.push(foodToAdd);
+    person.markModified('favoriteFoods');
+    // and inside the find callback - save() the updated Person.
+    person.save((err, updatedPerson) => {
+      console.log('saving',updatedPerson);
+      if(err) return console.log(err);
+      done(null, updatedPerson)
+    })
+  })
 };
-
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
 
