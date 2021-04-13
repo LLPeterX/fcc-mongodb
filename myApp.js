@@ -92,21 +92,35 @@ const findEditThenSave = (personId, done) => {
   const foodToAdd = 'hamburger';
   console.log('Search id=',personId);
   Person.findById(personId, (err, person) => {
-    if(err) return console.log(err); 
+    if(err) {
+      return console.log(err); 
+    } 
     person.favoriteFoods.push(foodToAdd);
     person.markModified('favoriteFoods');
     // and inside the find callback - save() the updated Person.
+    console.log('Person:',person);
     person.save((err, updatedPerson) => {
       console.log('saving',updatedPerson);
-      if(err) return console.log(err);
-      done(null, updatedPerson)
-    })
-  })
+      if(err) { return console.log(err); }
+      done(null, updatedPerson);
+    });
+  });
 };
+
+// найти персону по имени и изменить в ней возраст (age) на 20.
+// чтобы вернулся измененный документ, надо установить опцию new: true
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
-
-  done(null /*, data*/);
+  Person.findOneAndUpdate(
+    {name: personName}, //condition
+    {age: ageToSet}, // update
+    {new: true}, //oprions
+    function(err, updatedPerson) { // callback
+      if(err) {
+        return console.log('findAndUpdate error:',err);
+      }
+      done(null,updatedPerson);
+  });
 };
 
 const removeById = (personId, done) => {
