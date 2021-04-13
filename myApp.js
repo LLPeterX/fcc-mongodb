@@ -131,11 +131,17 @@ const removeById = (personId, done) => {
    });
 };
 
+// в mongodb индекс по name не должен быть уникальным!
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-
-  done(null /*, data*/);
+  Person.deleteMany({name: nameToRemove}, function(err, ret) {
+    if(err) {
+      return console.log('removeManyPeople() error:',err);
+    }
+    done(null, ret);
+  }); 
 };
+
 
 const queryChain = (done) => {
   const foodToSearch = "burrito";
