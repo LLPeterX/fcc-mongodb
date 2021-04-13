@@ -123,8 +123,12 @@ const findAndUpdate = (personName, done) => {
   });
 };
 
+// remove record by Id
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findByIdAndRemove(personId, function (err,data) {
+    if(err) { return console.log('removeById error:',err); }
+    done(null, data);
+   });
 };
 
 const removeManyPeople = (done) => {
